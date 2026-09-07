@@ -8,4 +8,4 @@ The project uses a classical numerical solver for the three-dimensional three-bo
 - classifier.py (classifies each trajectory as collision, escape, or bounded, imports the data generator)
 - model_3bp.py (builds labels, trains and evaluates the neural network model, imports the data generator and classifier)
 
-Simply run 'python model_3bp.py' to kick off the full pipeline (data generation -> classification -> training -> evaluation).
+Run 'python model_3bp.py' to kick off the full pipeline (data generation -> classification -> training -> evaluation).
