@@ -60,7 +60,7 @@ def get_training_data(mode="saved", n=10000):
 
 
 # Only change to "saved" once data has been generated at least once! Generate new data with "new"
-x, y, labels = get_training_data(mode="saved", n=10000)
+x, y, labels = get_training_data(mode="new", n=10000)
 
 
 
