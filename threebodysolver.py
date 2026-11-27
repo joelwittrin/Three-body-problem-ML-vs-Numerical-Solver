@@ -46,7 +46,7 @@ def system_odes(time, s, m1, m2, m3):
 
 # Time specifications (in seconds)
 t0 = 0
-t1 = 10
+t1 = 30
 t_eval_pts = np.linspace(t0, t1, 200)
 
 # Solving the system

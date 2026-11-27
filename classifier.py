@@ -9,13 +9,15 @@ results.
 
 # Make sure that the masses match with the other files.
 m1, m2, m3 = 1, 1, 1
-G = 6.67*(10**-11)
+# G = 1 to match the units used in threebodysolver
+G = 1
 
-def check_collision(y, collision_radius = 0.009):
+def check_collision(y, collision_radius = 0.1):
 
     # Checks if any collision occurs between the bodies corresponding to each trajectory. Returns a list with T/F for each iteration.
     # Takes entire state vector y as input.
     # Given that each body is a point mass, no physical radius is present and the collision radius is purely arbitrary.
+    # A radius of 0.1 is chosen to fit the initial positions in datagenerator_3bp, giving a reasonable share of collisions.
 
     lst = []
 
@@ -77,13 +79,17 @@ def check_escape(y, r_escape = 15):
             velocities = [v1, v2, v3]
             masses = [m1, m2, m3]
 
-            m, v, pos = masses[furthest_dist], velocities[furthest_dist], points[furthest_dist]
+            # Use the centre of mass frame, so that a drift of the whole system is not counted as an escape
+            com_pos = sum(masses[k] * points[k] for k in range(3)) / sum(masses)
+            com_vel = sum(masses[k] * velocities[k] for k in range(3)) / sum(masses)
+
+            m, v, pos = masses[furthest_dist], velocities[furthest_dist] - com_vel, points[furthest_dist]
 
             # Calculate the energy for the body that is furthest away, i.e. most likely to escape
             E_k = 0.5 * m * np.dot(v, v)
             E_p = sum(-G * m * masses[j] / np.linalg.norm(pos - points[j]) for j in range(3) if j != furthest_dist)
 
-            if np.linalg.norm(pos) > r_escape and E_k + E_p > 0:
+            if np.linalg.norm(pos - com_pos) > r_escape and E_k + E_p > 0:
                 escape = True
                 break
 
