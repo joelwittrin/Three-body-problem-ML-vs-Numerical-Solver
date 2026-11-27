@@ -1,11 +1,27 @@
-**THREE-BODY PROBLEM - ML CLASSIFIER vs NUMERICAL SOLVER**
+# Three-Body Problem: ML Classifier vs. Numerical Solver
 
-The project uses a classical numerical solver for the three-dimensional three-body problem to generate trajectories, which are then classified into three outcomes: collision, escape, or bounded, based on the initial state of the system. A simple neural network model is trained to predict this outcome directly from the initial conditions, without solving the full trajectory. Note that this project is NOT finished at this time.
+A neural network (PyTorch) that predicts whether a three-body system ends in **collision**, **escape** or **bounded motion** from its initial conditions. Training data is generated with a numerical solver (DOP853).
 
-**RUN ORDER**
-- threebodysolver.py (defines the ODE and the numerical solver, DOP853)
-- datagenerator_3bp.py (generates training data by simulating random initial states, imports the solver)
-- classifier.py (classifies each trajectory as collision, escape, or bounded, imports the data generator)
-- model_3bp.py (builds labels, trains and evaluates the neural network model, imports the data generator and classifier)
+## Files
 
-Run 'python model_3bp.py' to kick off the full pipeline (data generation -> classification -> training -> evaluation).
+- `threebodysolver.py`: equations of motion and solver
+- `datagenerator_3bp.py`: random initial conditions and simulation ($t = 30$)
+- `classifier.py`: labels each trajectory (collision radius 0.1, escape radius 15)
+- `model_3bp.py`: features, training and evaluation (10 000 systems, 2000 epochs, dropout 0.2, weight decay $10^{-4}$)
+
+## Usage
+
+```bash
+pip install numpy scipy scikit-learn matplotlib torch
+python model_3bp.py
+```
+
+Run once with `mode="new"`, then use `mode="saved"` to reuse the data.
+
+## Results
+
+Test accuracy: **64.8 %** (collision 60.0 %, escape 67.3 %, bounded 64.1 %). Always guessing the largest class gives 54 %.
+
+## Limitations
+
+The three-body problem is chaotic. Escapes from systems with positive energy are predictable, but for bound systems the outcome depends on chaotic close encounters, which limits how well it can be predicted from the initial state.
