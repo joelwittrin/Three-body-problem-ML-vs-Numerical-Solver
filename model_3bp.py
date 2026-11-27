@@ -31,7 +31,7 @@ def build_labels(collision_lst, escape_lst):
 
 
 
-def get_training_data(mode="saved", n=1000):
+def get_training_data(mode="saved", n=10000):
 
     # Generates new data or loads saved data. Using saved data is recommended
     # once the model is being tuned, so the solver is not re-run every time.
@@ -60,7 +60,7 @@ def get_training_data(mode="saved", n=1000):
 
 
 # Only change to "saved" once data has been generated at least once! Generate new data with "new"
-x, y, labels = get_training_data(mode="new", n=10000)
+x, y, labels = get_training_data(mode="saved", n=10000)
 
 
 
@@ -112,7 +112,7 @@ weights = torch.tensor(weights, dtype=torch.float32)
 
 criteria = nn.CrossEntropyLoss(weight=weights)
 
-optimize = torch.optim.Adam(model.parameters(), lr=0.001)
+optimize = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay = 1e-4)
 scheduler = torch.optim.lr_scheduler.StepLR(optimize, step_size=500, gamma=0.5)
 
 
